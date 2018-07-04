@@ -105,6 +105,10 @@ typedef struct tcpreplay_opt_s {
     u_int32_t loop;
     u_int32_t loopdelay_ms;
 
+    /* Skip packets */
+    u_int32_t skip_pkts;
+    struct timeval skip_to;
+
     int stats;
     bool use_pkthdr_len;
 
