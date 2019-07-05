@@ -2,7 +2,7 @@
 
 /*
  *   Copyright (c) 2001-2010 Aaron Turner <aturner at synfin dot net>
- *   Copyright (c) 2013-2017 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
+ *   Copyright (c) 2013-2018 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
  *
  *   The Tcpreplay Suite of tools is free software: you can redistribute it 
  *   and/or modify it under the terms of the GNU General Public License as 
@@ -20,7 +20,7 @@
 
  /* sendpacket.[ch] is my attempt to write a universal packet injection
   * API for BPF, libpcap, libdnet, and Linux's PF_PACKET.  I got sick
-  * and tired dealing with libnet bugs and its lack of active maintenence,
+  * and tired dealing with libnet bugs and its lack of active maintenance,
   * but unfortunately, libpcap frame injection support is relatively new
   * and not everyone uses Linux, so I decided to support all four as
   * best as possible.  If your platform/OS/hardware supports an additional
@@ -37,7 +37,7 @@
   * Right now, one big problem with the pcap_* methods is that libpcap
   * doesn't provide a reliable method of getting the MAC address of
   * an interface (required for tcpbridge).
-  * You can use PF_PACKET or BPF to get that, but if your system suports
+  * You can use PF_PACKET or BPF to get that, but if your system supports
   * those, might as well inject directly without going through another
   * level of indirection.
   *
@@ -239,7 +239,7 @@ sendpacket(sendpacket_t *sp, const u_char *data, size_t len, struct pcap_pkthdr 
     assert(sp);
     assert(data);
 
-    if (len <= 0)
+    if (len == 0)
         return -1;
 
 TRY_SEND_AGAIN:
@@ -320,7 +320,7 @@ TRY_SEND_AGAIN:
                         break;
 
                     default:
-                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)", 
+                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)",
                                 INJECT_METHOD, sp->sent + sp->failed + 1, strerror(errno), errno);
                 }
             }
@@ -349,7 +349,7 @@ TRY_SEND_AGAIN:
                         break;
 
                     default:
-                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)", 
+                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)",
                                 INJECT_METHOD, sp->sent + sp->failed + 1, strerror(errno), errno);
                 }
             }
@@ -376,7 +376,7 @@ TRY_SEND_AGAIN:
                         break;
 
                     default:
-                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)", 
+                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)",
                                 INJECT_METHOD, sp->sent + sp->failed + 1, strerror(errno), errno);
                 }
             }
@@ -409,7 +409,7 @@ TRY_SEND_AGAIN:
                         break;
 
                     default:
-                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)", 
+                        sendpacket_seterr(sp, "Error with %s [" COUNTER_SPEC "]: %s (errno = %d)",
                                 INJECT_METHOD, sp->sent + sp->failed + 1, pcap_geterr(sp->handle.pcap), errno);
                 }
             }
@@ -436,6 +436,10 @@ TRY_SEND_AGAIN:
                 /* this indicates that a retry was requested - this is not a failure */
                 sp->retry_eagain ++;
                 retcode = 0;
+#ifdef HAVE_SCHED_H
+                /* yield the CPU so other apps remain responsive */
+                sched_yield();
+#endif
                 goto TRY_SEND_AGAIN;
             }
 #endif /* HAVE_NETMAP */
@@ -447,6 +451,8 @@ TRY_SEND_AGAIN:
 
     if (retcode < 0) {
         sp->failed ++;
+    } else if (sp->abort) {
+        sendpacket_seterr(sp, "User abort");
     } else if (retcode != (int)len) {
         sendpacket_seterr(sp, "Only able to write %d bytes out of %u bytes total",
                 retcode, len);
@@ -485,7 +491,6 @@ sendpacket_open(const char *device, char *errbuf, tcpr_dir_t direction,
               case S_IFBLK:
                   errx(-1, "\"%s\" is a block device and is not a valid Tcpreplay device",
                       device);
-                  break;
                   break;
               case S_IFDIR:
                   errx(-1, "\"%s\" is a directory and is not a valid Tcpreplay device",
@@ -867,9 +872,12 @@ sendpacket_open_pf(const char *device, char *errbuf)
     sendpacket_t *sp;
     struct ifreq ifr;
     struct sockaddr_ll sa;
-    int n = 1, err;
+    int err;
     socklen_t errlen = sizeof(err);
     unsigned int UNUSED(mtu) = 1500;
+#ifdef SO_BROADCAST
+    int n = 1;
+#endif
 
     assert(device);
     assert(errbuf);
@@ -887,7 +895,6 @@ sendpacket_open_pf(const char *device, char *errbuf)
         snprintf(errbuf, SENDPACKET_ERRBUF_SIZE, "socket: %s", strerror(errno));
         return NULL;
     }
-
 
     /* get the interface id for the device */
     if ((sa.sll_ifindex = get_iface_index(mysocket, device, errbuf)) < 0) {
@@ -1001,7 +1008,7 @@ get_iface_index(int fd, const char *device, char *errbuf) {
 }
 
 /**
- * get's the hardware address via Linux's PF packet interface
+ * gets the hardware address via Linux's PF packet interface
  */
 static struct tcpr_ether_addr *
 sendpacket_get_hwaddr_pf(sendpacket_t *sp)

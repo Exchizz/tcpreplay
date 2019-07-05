@@ -2,7 +2,7 @@
 
 /*
  *   Copyright (c) 2001-2010 Aaron Turner <aturner at synfin dot net>
- *   Copyright (c) 2013-2017 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
+ *   Copyright (c) 2013-2018 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
  *
  *   The Tcpreplay Suite of tools is free software: you can redistribute it 
  *   and/or modify it under the terms of the GNU General Public License as 
@@ -32,7 +32,7 @@
 
 /* 
  * CACHEVERSION History:
- * 01 - Inital release.  1 bit of data/packet (primary or secondary nic)
+ * 01 - Initial release.  1 bit of data/packet (primary or secondary nic)
  * 02 - 2 bits of data/packet (drop/send & primary or secondary nic)
  * 03 - Write integers in network-byte order
  * 04 - Increase num_packets from 32 to 64 bit integer

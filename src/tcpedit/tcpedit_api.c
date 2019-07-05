@@ -2,7 +2,7 @@
 
 /*
  *   Copyright (c) 2001-2010 Aaron Turner <aturner at synfin dot net>
- *   Copyright (c) 2013-2017 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
+ *   Copyright (c) 2013-2018 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
  *
  *   The Tcpreplay Suite of tools is free software: you can redistribute it 
  *   and/or modify it under the terms of the GNU General Public License as 
@@ -233,7 +233,7 @@ tcpedit_set_mtu(tcpedit_t *tcpedit, int value)
 }
 
 /**
- * Enable trucating packets to the MTU lenght
+ * Enable truncating packets to the MTU length
  */
 int tcpedit_set_mtu_truncate(tcpedit_t *tcpedit, bool value)
 {

@@ -2,7 +2,7 @@
 
 /*
  *   Copyright (c) 2001-2010 Aaron Turner <aturner at synfin dot net>
- *   Copyright (c) 2013-2017 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
+ *   Copyright (c) 2013-2018 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
  *
  *   The Tcpreplay Suite of tools is free software: you can redistribute it 
  *   and/or modify it under the terms of the GNU General Public License as 
@@ -238,7 +238,7 @@ struct tcpr_arp_hdr
 #define ARPHRD_LOOPBACK 772 /* Loopback device */
     uint16_t ar_pro;         /* format of protocol address */
     uint8_t  ar_hln;         /* length of hardware address */
-    uint8_t  ar_pln;         /* length of protocol addres */
+    uint8_t  ar_pln;         /* length of protocol address */
     uint16_t ar_op;          /* operation type */
 #define ARPOP_REQUEST    1  /* req to resolve address */
 #define ARPOP_REPLY      2  /* resp to previous request */
@@ -340,7 +340,7 @@ struct tcpr_bgp4_notification_hdr
 struct tcpr_cdp_hdr
 {
     uint8_t cdp_version;     /* version (should always be 0x01) */
-    uint8_t cdp_ttl;         /* time reciever should hold info in this packet */
+    uint8_t cdp_ttl;         /* time receiver should hold info in this packet */
     uint16_t cdp_sum;        /* checksum */
     uint16_t cdp_type;       /* type */
 #define TCPR_CDP_DEVID    0x1 /* device id */
@@ -358,7 +358,7 @@ struct tcpr_cdp_hdr
 #define TCPR_CDP_CAP_L2B  0x02/* performs level 2 transparent bridging */
 #define TCPR_CDP_CAP_L2SRB 0x04/* performs level 2 sourceroute bridging */
 #define TCPR_CDP_CAP_L2S  0x08/* performs level 2 switching */
-#define TCPR_CDP_CAP_SR   0x10/* sends and recieves packets on a network */
+#define TCPR_CDP_CAP_SR   0x10/* sends and receives packets on a network */
 #define TCPR_CDP_CAP_NOI  0x20/* does not forward IGMP on non-router ports */
 #define TCPR_CDP_CAP_L1F  0x40/* provides level 1 functionality */
 };
@@ -610,15 +610,15 @@ struct tcpr_fddi_addr
 struct tcpr_gre_hdr
 {
     uint16_t flags_ver;
-#define GRE_CSUM	                        0x8000
-#define GRE_ROUTING	                        0x4000
-#define GRE_KEY		                        0x2000
-#define GRE_SEQ		                        0x1000
-#define GRE_STRICT	                        0x0800
-#define GRE_REC		                        0x0700
-#define GRE_ACK		                        0x0080
+#define GRE_CSUM                                0x8000
+#define GRE_ROUTING                             0x4000
+#define GRE_KEY                                 0x2000
+#define GRE_SEQ                                 0x1000
+#define GRE_STRICT                              0x0800
+#define GRE_REC                                 0x0700
+#define GRE_ACK                                 0x0080
 
-#define GRE_FLAGS_MASK	                        0x00F8
+#define GRE_FLAGS_MASK                          0x00F8
 #define GRE_VERSION_MASK                        0x0007
 
 #define GRE_VERSION_0                           0x0000
@@ -648,19 +648,19 @@ struct tcpr_gre_hdr
 #define GRE_PPP                                 0x880b /* taken from RFC 2637 */
 
     union {
-	struct {
-	    uint16_t sum;  /* optional */
-	    uint16_t offset;    /* optional */
-	    uint32_t key;        /* optional */
-	    uint32_t seq;        /* optional */
-	} _gre;
+    struct {
+        uint16_t sum;  /* optional */
+        uint16_t offset;    /* optional */
+        uint32_t key;        /* optional */
+        uint32_t seq;        /* optional */
+    } _gre;
 
-	struct {
-	    uint16_t payload_s; /* optional */
-	    uint16_t callID;    /* optional */
-	    uint32_t seq;        /* optional */
-	    uint32_t ack;        /* optional */
-	} _egre;
+    struct {
+        uint16_t payload_s; /* optional */
+        uint16_t callID;    /* optional */
+        uint32_t seq;        /* optional */
+        uint32_t ack;        /* optional */
+    } _egre;
     }_data;
 
 #define gre_sum _data._gre.sum
@@ -686,7 +686,7 @@ struct tcpr_gre_hdr
  */
 struct tcpr_gre_sre_hdr
 {
-    uint16_t af;  /* address familly */
+    uint16_t af;  /* address family */
     uint8_t sre_offset;
     uint8_t sre_length;
     uint8_t *routing;
@@ -727,7 +727,7 @@ struct tcpr_ipv4_hdr
 #define IP_RF 0x8000        /* reserved fragment flag */
 #endif
 #ifndef IP_DF
-#define IP_DF 0x4000        /* dont fragment flag */
+#define IP_DF 0x4000        /* don't fragment flag */
 #endif
 #ifndef IP_MF
 #define IP_MF 0x2000        /* more fragments flag */
@@ -1394,7 +1394,7 @@ struct tcpr_lsa_hdr
 /*
  *  Router LSA data format
  *
- *  Other stuff for TOS can be added for backward compatability, for this
+ *  Other stuff for TOS can be added for backward compatibility, for this
  *  version, only OSPFv2 is being FULLY supported.
  */
 struct tcpr_rtr_lsa_hdr
@@ -1662,7 +1662,7 @@ struct tcpr_token_ring_addr
  */
 struct tcpr_udp_hdr
 {
-    uint16_t uh_sport;       /* soure port */
+    uint16_t uh_sport;       /* source port */
     uint16_t uh_dport;       /* destination port */
     uint16_t uh_ulen;        /* length */
     uint16_t uh_sum;         /* checksum */
@@ -1747,7 +1747,7 @@ struct tcpr_hsrp_hdr
     uint8_t state;            /* Current state of the router */
     uint8_t hello_time;       /* Period in seconds between hello messages */
     uint8_t hold_time;        /* Seconds that the current hello message is valid */
-    uint8_t priority;         /* Priority for the election proccess */
+    uint8_t priority;         /* Priority for the election process */
     uint8_t group;            /* Standby group */
     uint8_t reserved;         /* Reserved field */
 #define HSRP_AUTHDATA_LENGTH  8

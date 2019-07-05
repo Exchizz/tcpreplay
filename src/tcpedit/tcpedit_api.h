@@ -2,7 +2,7 @@
 
 /*
  *   Copyright (c) 2001-2010 Aaron Turner <aturner at synfin dot net>
- *   Copyright (c) 2013-2017 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
+ *   Copyright (c) 2013-2018 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
  *
  *   The Tcpreplay Suite of tools is free software: you can redistribute it 
  *   and/or modify it under the terms of the GNU General Public License as 
@@ -27,7 +27,7 @@ extern "C" {
 
 /**
  * Selection of the encoder plugin is usually done by tcpedit_post_args()
- * so when using the config API you must manually specifiy it using one of
+ * so when using the config API you must manually specify it using one of
  * the following functions
  */
 int tcpedit_set_encoder_dltplugin_byid(tcpedit_t *, int);

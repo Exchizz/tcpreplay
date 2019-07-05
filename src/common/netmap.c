@@ -269,7 +269,7 @@ sendpacket_open_netmap(const char *device, char *errbuf, void *arg) {
      * The nmreq structure must have the NETMAP_API version for the running machine.
      * However the binary may have been compiled on a different machine than the
      * running machine. Discover the true netmap API version, and be careful to call
-     * fuctions that are available on all netmap versions.
+     * functions that are available on all netmap versions.
      */
     if (sp->netmap_version >= 10) {
         switch (*port) {
@@ -342,7 +342,7 @@ sendpacket_open_netmap(const char *device, char *errbuf, void *arg) {
 
     if (ioctl (sp->handle.fd, NIOCREGIF, &nmr)) {
         snprintf(errbuf, SENDPACKET_ERRBUF_SIZE, "Failure accessing netmap.\n"
-                "\tRequest for netmap version %u failed.\n\tCompiled netmap driver is version %u.\n\tError=%s\n",
+                "\tRequest for netmap version %d failed.\n\tCompiled netmap driver is version %d.\n\tError=%s\n",
                 sp->netmap_version, NETMAP_API, strerror(errno));
         goto NETMAP_IF_FAILED;
     }
@@ -548,13 +548,16 @@ bool netmap_tx_queues_empty(void *p)
 
     assert(sp);
 
+    sp->cur_tx_ring = 0;
     txring = NETMAP_TXRING(sp->nm_if, sp->cur_tx_ring);
     while (NETMAP_TX_RING_EMPTY(txring)) {
         /* current ring is empty- go to next */
         ++sp->cur_tx_ring;
-        if (sp->cur_tx_ring > sp->last_tx_ring)
+        if (sp->cur_tx_ring > sp->last_tx_ring) {
             /* last ring */
+            sp->cur_tx_ring = 0;
             return true;
+        }
 
         txring = NETMAP_TXRING(sp->nm_if, sp->cur_tx_ring);
     }

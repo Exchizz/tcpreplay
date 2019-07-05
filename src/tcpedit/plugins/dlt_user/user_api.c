@@ -2,7 +2,7 @@
 
 /*
  *   Copyright (c) 2001-2010 Aaron Turner <aturner at synfin dot net>
- *   Copyright (c) 2013-2017 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
+ *   Copyright (c) 2013-2018 Fred Klassen <tcpreplay at appneta dot com> - AppNeta
  *
  *   The Tcpreplay Suite of tools is free software: you can redistribute it 
  *   and/or modify it under the terms of the GNU General Public License as 
@@ -54,7 +54,7 @@ tcpedit_user_set_dlt_type(tcpedit_t *tcpedit, uint16_t type)
 /**
  * \brief Define the actual L2 header content.
  *
- * You need to set the data, it's lenght and which direction(s) to apply to.
+ * You need to set the data, it's length and which direction(s) to apply to.
  * BOTH - both directions (or in the case of no tcpprep cache file)
  * S2C - server to client (primary interface)
  * C2S - client to server (secondary interface)
